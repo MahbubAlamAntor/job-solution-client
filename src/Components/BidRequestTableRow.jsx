@@ -26,7 +26,7 @@ const BidRequestTableRow = ({ bid, handleUpdatedStatus }) => {
                 </div>
             </td>
             <td className='px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap'>
-                <div className='inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-yellow-500'>
+                <div className={`inline-flex items-center px-3 py-1 rounded-full gap-x-2 ${status === 'Completed' && 'bg-green-100/60 text-green-500'} ${status === 'In Progress' && 'bg-yellow-100/60 text-yellow-500'} ${status === 'Rejected' && 'bg-red-100/60 text-red-500'} ${status === 'Pending' && 'bg-blue-100/60 text-blue-500'}`}>
                     <span className='h-1.5 w-1.5 rounded-full bg-green-500'></span>
                     <h2 className='text-sm font-normal '>{status}</h2>
                 </div>
