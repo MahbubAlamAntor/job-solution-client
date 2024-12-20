@@ -29,7 +29,7 @@ const AddJob = () => {
         const allInfo = {title, date, buyer, category, min_price, max_price, description, bid_count:0}
         console.log(allInfo)
         try{
-            const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/add-job`, allInfo)
+            await axios.post(`${import.meta.env.VITE_API_URL}/add-job`, allInfo)
             form.reset();
             toast.success('Your Job Add Successfully done!!!!');
             navigate('/my-posted-jobs');
