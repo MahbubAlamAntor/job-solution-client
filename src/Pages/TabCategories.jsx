@@ -1,18 +1,19 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import 'react-tabs/style/react-tabs.css'
 import JobCard from './JobCard';
+import { useQuery } from '@tanstack/react-query';
 // import JobCard from './JobCard';
 
 const TabCategories = () => {
-    const [allJobs, setAllJobs] = useState([]);
-    useEffect(() => {
-        loadedAllData();
-    }, []);
-    const loadedAllData = async () => {
+
+    const {data: allJobs, isLoading} = useQuery({ queryKey: ['jobs'], queryFn: async() => {
         const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/jobs`);
-        setAllJobs(data)
+        return data
+    } })
+
+    if(isLoading){
+        return <span className="loading loading-bars loading-lg"></span>
     }
     return (
         <Tabs>

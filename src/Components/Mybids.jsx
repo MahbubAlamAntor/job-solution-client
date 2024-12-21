@@ -12,7 +12,7 @@ const Mybids = () => {
         bidsAllData();
     }, [user]);
     const bidsAllData = async () => {
-        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/bids/${user?.email}`);
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/bids/${user?.email}`, {withCredentials: true});
         setAllBids(data)
     }
 

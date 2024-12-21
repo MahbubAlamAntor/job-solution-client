@@ -2,15 +2,25 @@ import { useContext, useState } from "react";
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { AuthContext } from "../AuthProvider/AuthProvider";
-import axios from "axios";
+import axios, { all } from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 
 
 const AddJob = () => {
     const [startDate, setStartDate] = useState(new Date());
     const {user} = useContext(AuthContext);
     const navigate = useNavigate();
+
+    const {mutateAsync, isPending} = useMutation({
+        mutationFn: async jobData => {
+            await axios.post(`${import.meta.env.VITE_API_URL}/add-job`, jobData)
+        },
+        onSuccess: () => {
+            console.log('SuccessFully Saved Data by mutation')
+        }
+    })
 
     const handleSubmit = async(e) => {
         e.preventDefault();
@@ -29,7 +39,8 @@ const AddJob = () => {
         const allInfo = {title, date, buyer, category, min_price, max_price, description, bid_count:0}
         console.log(allInfo)
         try{
-            await axios.post(`${import.meta.env.VITE_API_URL}/add-job`, allInfo)
+            // make a post with mutation use
+            await mutateAsync(allInfo)
             form.reset();
             toast.success('Your Job Add Successfully done!!!!');
             navigate('/my-posted-jobs');
@@ -133,7 +144,7 @@ const AddJob = () => {
                     </div>
                     <div className='flex justify-end mt-6'>
                         <button className='disabled:cursor-not-allowed px-8 py-2.5 leading-5 text-white transition-colors duration-300 transhtmlForm bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600'>
-                            Save
+                            {isPending ? 'Saving...' : 'Save'}
                         </button>
                     </div>
                 </form>

@@ -3,17 +3,19 @@ import { AuthContext } from "../AuthProvider/AuthProvider";
 import axios from "axios";
 import BidRequestTableRow from "../Components/BidRequestTableRow";
 import toast from "react-hot-toast";
+import useAxiosSecure from "../hook/useAxiosSecure";
 
 const BidRequest = () => {
     const [allRequest, setAllRequest] = useState([]);
     const { user } = useContext(AuthContext);
+    const axiosSecure = useAxiosSecure();
 
 
     useEffect(() => {
         loadedAllData();
     }, [user]);
     const loadedAllData = async () => {
-        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/bidsRequest/${user?.email}`);
+        const { data } = await axiosSecure.get(`/bidsRequest/${user?.email}`);
         setAllRequest(data)
     }
 
@@ -21,7 +23,7 @@ const BidRequest = () => {
         console.log(id, prevStatus, status)
         if (prevStatus === status || prevStatus === 'Completed') return toast.error('Already Same Status')
         try {
-            const {data} = await axios.patch(`${import.meta.env.VITE_API_URL}/bidStatusUpdated/${id}`, {status})
+            const {data} = await axios.patch(`${import.meta.env.VITE_API_URL}/bidStatusUpdated/${id}`, {status}, {withCredentials: true})
             console.log(data)
             loadedAllData();
         } catch (error) {
