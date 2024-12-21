@@ -2,16 +2,17 @@ import { useContext, useState } from "react";
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { AuthContext } from "../AuthProvider/AuthProvider";
-import axios, { all } from "axios";
+import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 
 const AddJob = () => {
     const [startDate, setStartDate] = useState(new Date());
     const {user} = useContext(AuthContext);
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const {mutateAsync, isPending} = useMutation({
         mutationFn: async jobData => {
@@ -19,6 +20,7 @@ const AddJob = () => {
         },
         onSuccess: () => {
             console.log('SuccessFully Saved Data by mutation')
+            queryClient.invalidateQueries({ queryKey: ['jobs'] })
         }
     })
 
